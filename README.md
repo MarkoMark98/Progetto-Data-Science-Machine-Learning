@@ -57,55 +57,28 @@ Oltre a queste modifiche integrate in Social Mapper, sono stati creati script es
 
 ## Script principali
 
-### Crawling e metadati
-
-- `bio.py`  
-  Scarica la **bio** (descrizione del profilo) degli utenti, minimizzando il rischio di ban degli account di crawling.
-
-- `didascalia.py`  
-  Dato il media (via `mediaid`), ricostruisce il link al post e scarica:
-  - luogo,
-  - utenti taggati,
-  - descrizione,
-  - hashtag,
-  - didascalia,
-  producendo un file `info.json` per account.
-
-- `music_recognizer.py`  
-  - Estrae l’audio dai video (con **MoviePy**).
-  - Invia l’audio alle REST API di **audd.io** per la **music recognition**.
-  - Produce `music_info.json` con le tracce rilevate.
-
-### Object detection e interessi
-
-- `generayolo.py` + `leggiimmagini.py`  
-  - Applicano **YOLOv5** a foto e video.
-  - Producono `dentrofoto.json` con lista e conteggio degli oggetti riconosciuti per media, con soglie di confidenza:
-    - ≥55% per i video,
-    - ≥45% per le immagini.
-
-- `interessi.py` + `normalizza.py`  
-  - Aggregano gli oggetti più frequenti e li mappano su **categorie di interesse** (scala 1–5), ad esempio:
-    - `sociale`, `kitchen`, `classy`, `sport`, `gamer`, `tvaddicted`,  
-      `safefood`, `animali`, `junkfood`, `road`, `travel`.
-
-### NLP e aggregazione dataset
-
-- `bio_nlp.py`  
-  - Applica NER (via **pycorenlp / Stanford CoreNLP**) alle **bio**.
-  - Annotators usati:
-    - `ssplit`, `ner`, `depparse`.
-  - Estrae entità come: `person`, `location`, `organization`, `number`, `date`, `email`, `url`, `city`, `state or province`, `country`, `nationality`, `religion`, `title`, `ideology`.
-
-- `descrizione_nlp.py`  
-  - Stessa logica ma applicata alle **didascalie** (descrizioni dei post).
-  - Produce file `nlp.json` e `didascalia_nlp.json`.
-
-- `merge_json.py`  
-  - Unisce tutti i JSON per singolo account in un file `general.json`.
-
-- `generate_complete_dataset.py`  
-  - Unisce tutti i `general.json` in un unico `dataset_completo.json`.
+- **`scarica.py`**
+    - Utility per Instagram scraping e download massivo.
+    - Converte ID→shortcode, pulisce Unicode corrotti, scansiona dataset, scarica foto/video da tutti i profili.
+- **`profilelooter.py`**
+    - Estrae metadata post Instagram da file media.
+    - Usa **PostLooter** per ottenere caption, location, tag, musica.
+    - Salva in `info.json` per account, logga errori in `log.txt`.
+- **`StanfordCoreWithStanza.py`**
+    - Test connessione **Stanford CoreNLP** via Stanza.
+    - Verifica pipeline NER su testo di esempio.
+    - Annotators: `tokenize`, `ner`.
+- **`music_recognizer.py`**
+    - Riconoscimento musicale **AudD.io** su video MP4.
+    - Estrae audio con **MoviePy**, invia a API AudD.
+    - Salva risultati in `musicinfo.json` per account.
+- **`bio_nlp.py`**
+    - Applica NER (via **pycorenlp / Stanford CoreNLP**) alle **bio**.
+    - Annotators usati: `ssplit`, `ner`, `depparse`.
+    - Estrae entità come: `person`, `location`, `organization`, `number`, `date`, `email`, `url`, `city`, `state or province`, `country`, `nationality`, `religion`, `title`, `ideology`.
+- **`descrizione_nlp.py`**
+    - Stessa logica ma applicata alle **didascalie** (descrizioni dei post).
+    - Produce file `nlp.json` e `didascalia_nlp.json`.
 
 ## Dataset
 
@@ -203,7 +176,7 @@ Questo esempio dimostra come combinando informazioni apparentemente innocue (bio
 - **fuzzywuzzy** (similarità stringhe per confrontare nomi).
 - **audd.io** (music recognition via REST API).
 
-## Stato del progetto e licenza
+## Stato del progetto
 
 Questo progetto nasce come **tesina universitaria** e ha finalità esclusivamente **didattiche** e di **sensibilizzazione sulla privacy**.
 
