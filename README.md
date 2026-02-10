@@ -1,4 +1,4 @@
-# Social Mapper – Instagram Privacy & OSINT Project
+# Instagram Privacy & OSINT Project
 
 Questo progetto è una tesina per il corso di **Fondamenti di Data Science e Machine Learning** e utilizza ed estende lo strumento open source **Social Mapper** per analizzare quanto gli utenti di Instagram condividano informazioni sensibili, fino a ricostruire (in modo dimostrativo) un **codice fiscale** a partire dai dati pubblici di un profilo.
 
